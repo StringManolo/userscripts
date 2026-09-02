@@ -29,3 +29,20 @@ Translate text when selecting it. Text shows in a small toast. When the toast is
 
 
 ---------
+
+##### QuickTranslateInput
+
+[Copy from here](https://raw.githubusercontent.com/StringManolo/userscripts/refs/heads/main/QuickTranslateInput.user.js)
+
+Translate text by typing in a floating input. Double click (PC) or double tap with two fingers (mobile) on empty area to open the input. Write and press Enter to translate. The translation shows in a toast with a copy button. Tap the toast to hear the pronunciation of the translated word (native from wiktionary.org or Google TTS as fallback). The target language is persistent and saved locally.
+
+<img width="720" height="1366" alt="Screenshot_20260902_200659" src="https://github.com/user-attachments/assets/123a1dec-6364-4e13-814f-3dd9740ab809" />
+
+
+> Settings
+>
+> The target language can be changed via the dropdown selector next to the input. The selected language is automatically saved and persists between sessions. By default it translates to "es" (Spanish).
+
+> Privacy
+>
+> The script does not collect any type of data. The text you write is sent to Google Translate to get the translation. When you tap the toast to hear the pronunciation, the translated word is sent to wiktionary.org to find a native audio file, or to Google TTS as fallback. Google and Wiktionary use their own privacy rules.
