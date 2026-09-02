@@ -69,3 +69,35 @@ Open/close Eruda console with a simple gesture on touch devices: tap with 1 fing
 > Privacy
 >
 > The script does not collect any type of data. It loads the Eruda library from a public CDN (`cdn.jsdelivr.net/npm/eruda`). The state (whether Eruda was active or not) is stored locally using Violentmonkey's `GM_setValue` API. This data never leaves your device and is not shared across scripts or websites.
+
+
+-------
+
+##### Dual Subs - YouTube Dual Subtitles
+
+[Copy from here](https://raw.githubusercontent.com/StringManolo/userscripts/refs/heads/main/YTDualSubs.user.js)
+
+Displays dual subtitles on YouTube: the original language (auto-detected from available tracks) and a translated version. Includes a simple settings panel to choose the translation language and prioritize original languages.
+
+<img width="720" height="884" alt="Screenshot_20260902_215501" src="https://github.com/user-attachments/assets/bae864ec-45c4-4f99-b8d4-166cc7f70f60" />
+
+
+> Notice:
+> Activate youtube subtitles to activate the double subs automatically. It might take a bit of time to load them.
+>  
+> This script dosn't work for many videos (cuz the videos have no substitles available) or can stuck your video loading for a bit cuz the size of the subtitles is big or your device has low RAM.
+>   
+> You might need to reload the video multiple times since the youtube backend server used sometimes dosn't like the download of multiples subtitles and answers with error: TO MANY REQUESTS. 
+
+> Settings
+>
+> - **Translation language**: Selectable via the floating button at the bottom right. Default is `es` (Spanish). You can change it to any language supported by Google Translate.
+> - **Original language priority**: The script tries to use the first available subtitle track matching the languages you select in the panel. You can toggle checkboxes to reorder or restrict which languages are considered.
+> - Changes are applied immediately and the script re-processes the current video automatically.
+
+> Privacy
+>
+> The script does not collect any type of data. Subtitles are fetched directly from YouTube's own servers using the standard timedtext API. No third-party services are used.
+
+---------
+
