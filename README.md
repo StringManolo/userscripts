@@ -8,6 +8,9 @@
 ### List of Available Scripts:
 
 ##### ToastTranslatorVoice
+
+[Copy from here](https://raw.githubusercontent.com/StringManolo/userscripts/refs/heads/main/ToastTranslatorVoice.user.js)
+
 Translate text when selecting it. Text shows in a small toast. When the toast is clicked you will hear the word. The script searchs for a native speaker reading the word using wiktionary.org. If the audio is not found, defaults to google translate.
 
 <img width="720" height="481" alt="Screenshot_20260902_190452" src="https://github.com/user-attachments/assets/2225d30d-770c-4970-ba48-aa28a8557704" />
