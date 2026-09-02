@@ -2,14 +2,15 @@
 // @name         Eruda Quick Access
 // @namespace    https://github.com/StringManolo/userscripts
 // @version      1.0
-// @description  Abre/cierra la consola Eruda con un gesto: toca con 1 dedo, espera un momento, luego toca con 2 dedos. Sin iconos molestos.
+// @description  Abre/cierra la consola Eruda con un gesto: toca con 1 dedo, espera, y luego toca con 2 dedos. Persistencia entre páginas con GM_setValue.
 // @author       StringManolo
 // @license      GPL-3.0-or-later
 // @homepageURL  https://github.com/StringManolo/userscripts
 // @supportURL   https://github.com/StringManolo/userscripts/issues
 // @match        *://*/*
 // @noframes
-// @grant        none
+// @grant        GM_setValue
+// @grant        GM_getValue
 // @run-at       document-idle
 // ==/UserScript==
 
@@ -19,13 +20,14 @@
   // ================================================================
   // CONFIGURACIÓN
   // ================================================================
-  const MIN_DELAY = 150;          // Tiempo mínimo (ms) entre toque con 1 dedo y toque con 2 dedos
+  const MIN_DELAY = 150;          // Tiempo mínimo (ms) entre el toque con 1 dedo y el de 2 dedos
   const MAX_DELAY = 500;          // Tiempo máximo (ms) para completar el gesto
-  const RESET_TIMEOUT = 700;      // Tiempo tras el cual se reinicia el estado si no se completa el gesto
+  const RESET_TIMEOUT = 700;      // Tiempo tras el cual se reinicia el estado
+  const STORAGE_KEY = 'eruda_active';
 
   const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
   if (!isTouchDevice) {
-    console.log('[Eruda] 💻 Dispositivo no táctil. El gesto no está disponible.');
+    console.log('[Eruda] 💻 No táctil: gesto no disponible.');
     return;
   }
 
@@ -41,6 +43,16 @@
   // ================================================================
   // ERUDA
   // ================================================================
+  const TOOLS = [
+    'console',
+    'elements',
+    'network',
+    'resources',
+    'sources',
+    'info',
+    'snippets'
+  ];
+
   function loadEruda() {
     if (erudaLoaded) return;
     const script = document.createElement('script');
@@ -48,11 +60,13 @@
     script.onload = function () {
       erudaLoaded = true;
       eruda.init({
-        tool: ['console'],
-        defaults: { display: 'none' }
+        tool: TOOLS,
+        defaults: { display: 'all' }
       });
-      erudaVisible = false;
-      showToast('Eruda listo');
+      erudaVisible = true;
+      GM_setValue(STORAGE_KEY, true);
+      console.log('[Eruda] ✅ Cargado con todas las herramientas.');
+      showToast('Eruda activado');
     };
     script.onerror = function () {
       console.error('[Eruda] ❌ Error al cargar.');
@@ -68,16 +82,20 @@
     if (erudaVisible) {
       eruda.destroy();
       erudaVisible = false;
+      GM_setValue(STORAGE_KEY, false);
+      console.log('[Eruda] 🔒 Oculto');
       showToast('Eruda desactivado');
     } else {
       eruda.init();
       erudaVisible = true;
+      GM_setValue(STORAGE_KEY, true);
+      console.log('[Eruda] 🔓 Visible');
       showToast('Eruda activado');
     }
   }
 
   // ================================================================
-  // TOAST NOTIFICACIÓN (estilo minimalista)
+  // TOAST
   // ================================================================
   let toastTimer = null;
   function showToast(msg) {
@@ -114,7 +132,7 @@
   }
 
   // ================================================================
-  // GESTOS: 1 dedo → esperar → 2 dedos
+  // GESTOS
   // ================================================================
   function resetGesture() {
     gestureActive = false;
@@ -125,6 +143,7 @@
 
   function handleTouchStart(e) {
     const target = e.target;
+    // Ignorar toques en elementos interactivos
     if (target.closest('a') || target.closest('button') || target.closest('input') || target.closest('textarea')) {
       return;
     }
@@ -132,36 +151,22 @@
     const touches = e.touches;
     const now = Date.now();
 
-    if (touches.length === 0 || touches.length > 2) {
-      return;
-    }
+    if (touches.length === 0 || touches.length > 2) return;
 
     // --- TOQUE CON 1 DEDO ---
     if (touches.length === 1) {
-      // Si ya estamos esperando 2 dedos, ignoramos cualquier toque con 1 dedo
-      if (gestureActive) {
-        return;
-      }
-
-      // Iniciamos el gesto
+      if (gestureActive) return; // Ignorar durante espera
       lastSingleTapTime = now;
       gestureActive = true;
-
       clearTimeout(resetTimer);
-      resetTimer = setTimeout(() => {
-        resetGesture();
-      }, RESET_TIMEOUT);
+      resetTimer = setTimeout(resetGesture, RESET_TIMEOUT);
       return;
     }
 
     // --- TOQUE CON 2 DEDOS ---
     if (touches.length === 2) {
-      if (!gestureActive) {
-        return;
-      }
-
+      if (!gestureActive) return;
       const elapsed = now - lastSingleTapTime;
-
       if (elapsed >= MIN_DELAY && elapsed <= MAX_DELAY) {
         e.preventDefault();
         toggleEruda();
@@ -173,9 +178,27 @@
   }
 
   // ================================================================
-  // REGISTRO DEL EVENTO
+  // RESTAURAR ESTADO AL CARGAR LA PÁGINA
+  // ================================================================
+  function restoreErudaState() {
+    const stored = GM_getValue(STORAGE_KEY, false);
+    if (stored) {
+      console.log('[Eruda] 🔄 Restaurando estado activo de página anterior...');
+      if (document.readyState === 'complete') {
+        loadEruda();
+      } else {
+        window.addEventListener('load', loadEruda);
+      }
+    } else {
+      console.log('[Eruda] 📴 Inactivo por defecto.');
+    }
+  }
+
+  // ================================================================
+  // REGISTRO DE EVENTOS
   // ================================================================
   document.addEventListener('touchstart', handleTouchStart, { passive: false });
+  restoreErudaState();
 
-  console.log('[Eruda] 🚀 Cargado. Gesto: 1 dedo → (150-500ms) → 2 dedos.');
+  console.log('[Eruda] 🖐️ Gesto: 1 dedo → esperar (150-500ms) → 2 dedos. Persistencia con GM_setValue.');
 })();
