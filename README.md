@@ -46,3 +46,26 @@ Translate text by typing in a floating input. Double click (PC) or double tap wi
 > Privacy
 >
 > The script does not collect any type of data. The text you write is sent to Google Translate to get the translation. When you tap the toast to hear the pronunciation, the translated word is sent to wiktionary.org to find a native audio file, or to Google TTS as fallback. Google and Wiktionary use their own privacy rules.
+
+
+---------
+
+##### Eruda Quick Access
+
+[Copy from here](https://raw.githubusercontent.com/StringManolo/userscripts/refs/heads/main/ErudaQuickAccess.user.js)
+
+Open/close Eruda console with a simple gesture on touch devices: tap with 1 finger, wait a moment, then tap with 2 fingers. All tools (Console, Elements, Network, Resources, Sources, Info, Snippets) are available by default. The state is persisted across pages using Violentmonkey's storage API: if you leave Eruda open, it will automatically reopen on the next page you visit.
+
+<img width="720" height="1290" alt="Screenshot_20260902_211536" src="https://github.com/user-attachments/assets/d7f12568-ba7a-4759-963a-8fc639148a38" />
+
+
+> Settings
+>
+> The gesture timing can be adjusted by editing the constants at the top of the script:
+> - `MIN_DELAY`: minimum time (ms) between the first tap (1 finger) and the second tap (2 fingers). Default: 150.
+> - `MAX_DELAY`: maximum time (ms) to complete the gesture. Default: 500.
+> - `RESET_TIMEOUT`: time (ms) after which the gesture state resets if not completed. Default: 700.
+
+> Privacy
+>
+> The script does not collect any type of data. It loads the Eruda library from a public CDN (`cdn.jsdelivr.net/npm/eruda`). The state (whether Eruda was active or not) is stored locally using Violentmonkey's `GM_setValue` API. This data never leaves your device and is not shared across scripts or websites.
