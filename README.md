@@ -101,3 +101,19 @@ Displays dual subtitles on YouTube: the original language (auto-detected from av
 
 ---------
 
+##### GoogleSearchAudioDownloader
+
+[Copy from here](https://raw.githubusercontent.com/StringManolo/userscripts/refs/heads/main/GoogleSearchAudioDownloader.user.js)
+
+Downloads the pronunciation audio from Google Search results as MP3 without opening the player. When you click the speaker icon on a word definition or translation, a modal appears with a direct download button. The audio also continues to play normally.
+
+<img width="720" height="1477" alt="Screenshot_20260903_163020" src="https://github.com/user-attachments/assets/a5e912c5-1149-44e5-93ad-2d61c197dbdc" />
+
+
+> Settings
+>
+> The filename is generated automatically from the language and the text (e.g. `tts_ru_Добрый_вече.mp3`). You can change the default name or pattern by editing the `generateFilename` function in the script.
+
+> Privacy
+>
+> The script does not collect any type of data. The audio is fetched directly from `translate.google.com` using the official TTS endpoint. Google applies its own privacy rules.
